@@ -213,13 +213,25 @@ function initDb() {
         (3, 'Berlin', 2);
     `);
 
-    db.run(`
-      INSERT OR IGNORE INTO consultants (id, name, email, password, role, office_id, region_id, skill_profile) VALUES
-        (1, 'Alice Wong', 'alice.wong@velion.com', 'password1', 'Consultant', 1, 1, 'Cloud, DevOps'),
-        (2, 'Ben Kumar', 'ben.kumar@velion.com', 'password2', 'KnowledgeChampion', 1, 1, 'Data, Analytics'),
-        (3, 'Carla Ruiz', 'carla.ruiz@velion.com', 'password3', 'GovCouncil', 3, 2, 'Governance'),
-        (4, 'Darren Lee', 'darren.lee@velion.com', 'password4', 'RegionalManager', 2, 1, 'EMEA North'),
-    `);
+  function logRun(label, sql) {
+  return function (err) {
+    if (err) {
+      console.error(`[DB] ${label} failed:`, err, '\nSQL:', sql);
+    }
+  };
+}
+
+// Example use:
+const seedConsultantsSql = `
+  INSERT OR IGNORE INTO consultants (id, name, email, password, role, office_id, region_id, skill_profile) VALUES
+    (1, 'Alice Wong', 'alice.wong@velion.com', 'password1', 'Consultant', 1, 1, 'Cloud, DevOps'),
+    (2, 'Ben Kumar', 'ben.kumar@velion.com', 'password2', 'KnowledgeChampion', 1, 1, 'Data, Analytics'),
+    (3, 'Carla Ruiz', 'carla.ruiz@velion.com', 'password3', 'GovCouncil', 3, 2, 'Governance'),
+    (4, 'Darren Lee', 'darren.lee@velion.com', 'password4', 'RegionalManager', 2, 1, 'EMEA North');
+`;
+
+db.run(seedConsultantsSql, logRun('seed consultants', seedConsultantsSql));
+
 
     db.run(`
       INSERT OR IGNORE INTO clients (id, name, sector) VALUES
