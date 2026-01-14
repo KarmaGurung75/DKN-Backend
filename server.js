@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const { initDb } = require('./db');
@@ -15,30 +14,10 @@ const analyticsRoutes = require('./routes/analytics');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// --- CORS configuration (local + deployed frontend) ---
-const allowedOrigins = ['http://localhost:3000'];
-
-// On Render, set FRONTEND_ORIGIN to your Netlify URL
-// e.g. https://dkn-frontend-example.netlify.app
-if (process.env.FRONTEND_ORIGIN) {
-  allowedOrigins.push(process.env.FRONTEND_ORIGIN);
-}
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // allow REST clients / curl (no origin) and our known frontends
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error('Not allowed by CORS'));
-    },
-  })
-);
-
-// -----------------------------------------------------
 initDb();
 
+// Open CORS for all origins (fine for this assignment)
+app.use(cors());
 app.use(express.json());
 
 // Public route for login / signup
